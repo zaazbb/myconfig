@@ -1,0 +1,207 @@
+source $VIMRUNTIME/vimrc_example.vim
+" by jf.
+"source $VIMRUNTIME/mswin.vim
+" by jf.
+"behave mswin
+
+set diffexpr=MyDiff()
+function MyDiff()
+  let opt = '-a --binary '
+  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+  let arg1 = v:fname_in
+  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+  let arg2 = v:fname_new
+  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+  let arg3 = v:fname_out
+  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+  if $VIMRUNTIME =~ ' '
+    if &sh =~ '\<cmd'
+      if empty(&shellxquote)
+        let l:shxq_sav = ''
+        set shellxquote&
+      endif
+      let cmd = '"' . $VIMRUNTIME . '\diff"'
+    else
+      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+    endif
+  else
+    let cmd = $VIMRUNTIME . '\diff'
+  endif
+  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
+  if exists('l:shxq_sav')
+    let &shellxquote=l:shxq_sav
+  endif
+endfunction
+
+
+" setting by jf.
+ 
+""set nocompatible "" not compatible with vi.
+set number
+set cursorline "" highlight current line.
+highlight ColorColumn ctermbg=Grey guibg=Grey
+set colorcolumn=80 "" right margin line.
+""set columns=85
+
+""Every time you load a buffer (i.e., open a file), that will determine 
+""the number of columns required to show the largest line number, 
+""set the 'numberwidth' option accordingly, and set 'columns' to 
+""that number plus 80 for your text.
+au BufRead * let &numberwidth = float2nr(log10(line("$"))) + 2
+          \| let &columns = &numberwidth + 80
+
+set tabstop =4
+set shiftwidth =4
+set softtabstop =4
+set expandtab
+set autoindent
+set cindent
+""set ignorecase
+
+""set encoding =uft-8 ""disp encoding.
+set fileencodings =utf-8,cp936 ""auto check encoding.
+set fileencoding =utf-8 ""new & create file use this encoding.
+
+set nobackup
+set noundofile
+set noswapfile
+""set backupext =.bak
+""set patchmode =.orig
+
+""cmd autocomplete.
+set wildmenu
+""set fileformats=dos
+
+set guioptions -=T ""hide tool bar.
+set guioptions -=m ""hide menu bar.
+
+filetype plugin on
+filetype indent on
+
+""share vim's + clipboard with windows's clipboard.
+""no this line, use "+y "+p to copy and paste with windows's clipboard.
+set clipboard+=unnamed
+
+" Set to auto read when a file is changed from the outside.
+set autoread
+set autowrite "" auto save.
+
+syntax enable
+colorscheme lucius
+
+set foldcolumn =1
+set foldmethod =indent
+set foldlevelstart=99
+
+""set laststatus=2
+""set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m/%y\ -\ %H:%M\")}
+
+set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI
+""set gfw=YouYuan:h16:cGB2312
+
+execute "cd" substitute(expand("%:h"),' ','\\ ','g')
+
+autocmd Syntax python map <F5> <Esc>:!python %<CR>
+autocmd Syntax python imap <F5> <Esc>:!python %<CR>
+
+"ctags
+set tags=tags;
+set autochdir
+nmap <F9> <Esc>:!ctags -R *<CR>
+
+"taglist
+let Tlist_Ctags_Cmd = 'D:/soft/Vim/vim73/ctags.exe'
+let Tlist_Show_One_File=1
+let Tlist_Exit_OnlyWindow =1
+""let Tlist_File_Fold_Auto_Close = 1
+let Tlist_Use_Right_Window=1
+""let Tlist_Show_Menu =1
+""let Tlist_Auto_Open =1
+nnoremap <silent> <F8> :TlistToggle<CR>
+
+
+"NERDTreeToggle 
+let NERDTreeWinPos ="right"
+let NERDTreeSortOrder =['\/$', '\.c$', '\.cpp$', '\.h$', '\.py$', '*', '\.swp$',  '\.bak$', '\~$']
+let NERDTreeIgnore= ['\.vim$', '\~$', '\.orig$', '\.bak$', '^tags$',
+    \ '\.7z$', '\.zip$',
+    \ '\.[Ll][Ss][Tt]$', '\.[Oo][Bb][Jj]$', '\.hex$', '\.lnp$', '\.plg$', '\.uvopt$', '\.uvproj$']
+nnoremap <silent> <F7> :NERDTreeToggle <CR>
+
+"SrcExpl
+nmap <F6> :SrcExplToggle<CR> 
+let g:SrcExpl_pluginList = [
+    \ "__Tag_List__",
+    \ "NERD_tree_1",
+    \ "Source_Explorer",
+    \ "vimprojects"
+    \ ]
+let g:SrcExpl_searchLocalDef =0
+let g:SrcExpl_isUpdateTags = 0 
+let g:SrcExpl_updateTagsKey = "<F10>"
+
+"winManager
+""let g:winManagerWindowLayout = "FileExplorer|TagList"
+""let g:persistentBehaviour =0
+""nmap <silent> <F8> :WMToggle<CR>
+
+"project
+""nmap <silent> <Leader>P :Project<CR>
+let g:proj_flags ="gimst" "<F12>
+
+
+"auto complete bracket
+
+""inoremap ( ()<Esc>i
+""inoremap [ []<Esc>i
+""inoremap { {<CR>}<Esc>O
+""autocmd Syntax html,vim inoremap < <lt>><Esc>i| inoremap > <c-r>=ClosePair('>')<CR>
+""inoremap ) <c-r>=ClosePair(')')<CR>
+""inoremap ] <c-r>=ClosePair(']')<CR>
+""inoremap } <c-r>=CloseBracket()<CR>
+""inoremap " <c-r>=QuoteDelim('"')<CR>
+""inoremap ' <c-r>=QuoteDelim("'")<CR>
+""
+""function ClosePair(char)
+"" if getline('.')[col('.') - 1] == a:char
+"" return "\<Right>"
+"" else
+"" return a:char
+"" endif
+""endf
+""
+""function CloseBracket()
+"" if match(getline(line('.') + 1), '\s*}') < 0
+"" return "\<CR>}"
+"" else
+"" return "\<Esc>j0f}a"
+"" endif
+""endf
+""
+""function QuoteDelim(char)
+"" let line = getline('.')
+"" let col = col('.')
+"" if line[col - 2] == "\\"
+"" "Inserting a quoted quotation mark into the string
+"" return a:char
+"" elseif line[col - 1] == a:char
+"" "Escaping out of the string
+"" return "\<Right>"
+"" else
+"" "Starting a string
+"" return a:char.a:char."\<Esc>i"
+"" endif
+""endf
+
+
+"
+""function AddTemplateFile_h()
+""    let date = date /T
+""    let info = "Template file *.h\n"
+""        \."wrwer.\n"
+""    silent put! =info
+""endfunction
+""
+""autocmd BufNewFile *.h call AddTemplateFile_h()
+
