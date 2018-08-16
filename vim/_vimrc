@@ -1,8 +1,11 @@
 source $VIMRUNTIME/vimrc_example.vim
+
+
 " by jf.
 "source $VIMRUNTIME/mswin.vim
 " by jf.
 "behave mswin
+
 
 set diffexpr=MyDiff()
 function MyDiff()
@@ -11,10 +14,13 @@ function MyDiff()
   if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
   let arg1 = v:fname_in
   if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+  let arg1 = substitute(arg1, '!', '\!', 'g')
   let arg2 = v:fname_new
   if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+  let arg2 = substitute(arg2, '!', '\!', 'g')
   let arg3 = v:fname_out
   if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+  let arg3 = substitute(arg3, '!', '\!', 'g')
   if $VIMRUNTIME =~ ' '
     if &sh =~ '\<cmd'
       if empty(&shellxquote)
@@ -28,6 +34,7 @@ function MyDiff()
   else
     let cmd = $VIMRUNTIME . '\diff'
   endif
+  let cmd = substitute(cmd, '!', '\!', 'g')
   silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
   if exists('l:shxq_sav')
     let &shellxquote=l:shxq_sav
@@ -36,11 +43,17 @@ endfunction
 
 
 " setting by jf.
+"
+
+" all highlight color config must put in colorscheme file.
+" if you put it in vimrc file, it do not work.
+colorscheme lucius
+
+syntax enable
  
 ""set nocompatible "" not compatible with vi.
 set number
 set cursorline "" highlight current line.
-highlight ColorColumn ctermbg=Grey guibg=Grey
 set colorcolumn=80 "" right margin line.
 ""set columns=85
 
@@ -59,8 +72,8 @@ set autoindent
 set cindent
 ""set ignorecase
 
-""set encoding =uft-8 ""disp encoding.
-set fileencodings =utf-8,cp936 ""auto check encoding.
+"set encoding =utf-8 ""disp encoding.
+set fileencodings =ucs-bom,utf-8,cp936 ""auto check encoding.
 set fileencoding =utf-8 ""new & create file use this encoding.
 
 set nobackup
@@ -87,8 +100,6 @@ set clipboard+=unnamed
 set autoread
 set autowrite "" auto save.
 
-syntax enable
-colorscheme lucius
 
 set foldcolumn =1
 set foldmethod =indent
@@ -102,8 +113,10 @@ set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI
 
 execute "cd" substitute(expand("%:h"),' ','\\ ','g')
 
-autocmd Syntax python map <F5> <Esc>:!python %<CR>
-autocmd Syntax python imap <F5> <Esc>:!python %<CR>
+"autocmd Syntax python map <F5> <Esc>:!python %<CR>
+"autocmd Syntax python imap <F5> <Esc>:!python %<CR>
+autocmd Syntax ruby map <F5> <Esc>:!ruby %<CR>
+autocmd Syntax ruby imap <F5> <Esc>:!ruby %<CR>
 
 "ctags
 set tags=tags;
