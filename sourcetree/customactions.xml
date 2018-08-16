@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfCustomAction xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <CustomAction>
+    <Caption>open-in-vim</Caption>
+    <Target>"C:\Program Files (x86)\Vim\vim81\gvim.exe"</Target>
+    <Parameters>$FILE</Parameters>
+    <OpenInSeparateWindow>true</OpenInSeparateWindow>
+    <ShowFullOutput>true</ShowFullOutput>
+    <IsSilent>true</IsSilent>
+  </CustomAction>
+  <CustomAction>
+    <Caption>open-in-idle</Caption>
+    <Target>python</Target>
+    <Parameters>-m idlelib $FILE</Parameters>
+    <OpenInSeparateWindow>true</OpenInSeparateWindow>
+    <ShowFullOutput>true</ShowFullOutput>
+    <IsSilent>true</IsSilent>
+  </CustomAction>
+  <CustomAction>
+    <Caption>kdiff3-commits</Caption>
+    <Target>cmd</Target>
+    <Parameters>/C %USERPROFILE%\AppData\Local\Atlassian\SourceTree\git_local\bin\git.exe difftool -d --tool=sourcetree $SHA</Parameters>
+    <OpenInSeparateWindow>true</OpenInSeparateWindow>
+    <ShowFullOutput>true</ShowFullOutput>
+    <IsSilent>true</IsSilent>
+  </CustomAction>
+</ArrayOfCustomAction>
